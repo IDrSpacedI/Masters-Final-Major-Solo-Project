@@ -12,18 +12,17 @@ public class TimeTrail : MonoBehaviour
     public float meshDestroyDelay = 3f;
 
     [Header("Shader Related")]
-    public Material mat;
     public string shaderVarRef;
     public float shaderVarRate = 0.1f;
-    public float shaderVarReshreshRate = 0.5f;
+    public float shaderVarRefreshRate = 0.5f;
 
     private bool isTrailActive;
-    private SkinnedMeshRenderer skinnedMeshRenderer;
+    private SkinnedMeshRenderer[] skinnedMeshRenderers;
 
     void Start()
     {
-        // Get the SkinnedMeshRenderer component on the player
-        skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        // Get all SkinnedMeshRenderer components on the player
+        skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
     }
 
     void Update()
@@ -41,25 +40,37 @@ public class TimeTrail : MonoBehaviour
         {
             timeActive -= meshRefreshRate;
 
-            if (skinnedMeshRenderer != null)
+            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
             {
-                GameObject obj = new GameObject();
-                obj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
+                if (skinnedMeshRenderer != null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
 
-                MeshRenderer mr = obj.AddComponent<MeshRenderer>();
-                MeshFilter mf = obj.AddComponent<MeshFilter>();
+                    MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+                    MeshFilter mf = obj.AddComponent<MeshFilter>();
 
-                mr.material = mat;
-                mf.sharedMesh = skinnedMeshRenderer.sharedMesh;
+                    Material[] materials = skinnedMeshRenderer.materials;
+                    Material[] sharedMaterials = new Material[materials.Length];
 
-                Mesh mesh = new Mesh();
-                skinnedMeshRenderer.BakeMesh(mesh);
+                    for (int i = 0; i < materials.Length; i++)
+                    {
+                        Material newMaterial = new Material(materials[i]);
+                        newMaterial.SetFloat(shaderVarRef, materials[i].GetFloat(shaderVarRef));
+                        sharedMaterials[i] = newMaterial;
+                    }
 
-                mf.mesh = mesh;
+                    mr.materials = sharedMaterials;
 
-                StartCoroutine(AnimateMaterialFloat(mr.material, 0, shaderVarRate, shaderVarReshreshRate));
+                    Mesh mesh = new Mesh();
+                    skinnedMeshRenderer.BakeMesh(mesh);
 
-                Destroy(obj, meshDestroyDelay);
+                    mf.mesh = mesh;
+
+                    StartCoroutine(AnimateMaterialFloat(mr.materials, 0, shaderVarRate, shaderVarRefreshRate));
+
+                    Destroy(obj, meshDestroyDelay);
+                }
             }
 
             yield return new WaitForSeconds(meshRefreshRate);
@@ -68,14 +79,27 @@ public class TimeTrail : MonoBehaviour
         isTrailActive = false;
     }
 
-    IEnumerator AnimateMaterialFloat(Material mat, float goal, float rate, float refreshRate)
+    IEnumerator AnimateMaterialFloat(Material[] materials, float goal, float rate, float refreshRate)
     {
-        float valueToAnimate = mat.GetFloat(shaderVarRef);
-
-        while(valueToAnimate > goal)
+        while (true)
         {
-            valueToAnimate -= rate;
-            mat.SetFloat(shaderVarRef, valueToAnimate);
+            bool allFinished = true;
+
+            for (int i = 0; i < materials.Length; i++)
+            {
+                float valueToAnimate = materials[i].GetFloat(shaderVarRef);
+
+                if (valueToAnimate > goal)
+                {
+                    allFinished = false;
+                    valueToAnimate -= rate;
+                    materials[i].SetFloat(shaderVarRef, valueToAnimate);
+                }
+            }
+
+            if (allFinished)
+                break;
+
             yield return new WaitForSeconds(refreshRate);
         }
     }

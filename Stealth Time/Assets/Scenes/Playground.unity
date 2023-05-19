@@ -4107,10 +4107,9 @@ MonoBehaviour:
   meshRefreshRate: 0.1
   positionToSpawn: {fileID: 3893294199639930361}
   meshDestroyDelay: 2
-  mat: {fileID: 2100000, guid: 7815bb8492ee1124082c10d4066e255b, type: 2}
   shaderVarRef: _Alpha
   shaderVarRate: 0.1
-  shaderVarReshreshRate: 0.5
+  shaderVarRefreshRate: 0.5
 --- !u!4 &6983258930626336602
 Transform:
   m_ObjectHideFlags: 0
