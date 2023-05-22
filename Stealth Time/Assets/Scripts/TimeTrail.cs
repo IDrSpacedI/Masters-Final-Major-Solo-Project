@@ -11,10 +11,8 @@ public class TimeTrail : MonoBehaviour
     public Transform positionToSpawn;
     public float meshDestroyDelay = 3f;
 
-    [Header("Shader Related")]
-    public string shaderVarRef;
-    public float shaderVarRate = 0.1f;
-    public float shaderVarRefreshRate = 0.5f;
+    [Header("Material Related")]
+    public Material newMaterial; // Your own material
 
     private bool isTrailActive;
     private SkinnedMeshRenderer[] skinnedMeshRenderers;
@@ -23,11 +21,22 @@ public class TimeTrail : MonoBehaviour
     {
         // Get all SkinnedMeshRenderer components on the player
         skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        // Replace materials with the new material
+        foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
+        {
+            Material[] materials = new Material[skinnedMeshRenderer.sharedMaterials.Length];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i] = newMaterial;
+            }
+            skinnedMeshRenderer.sharedMaterials = materials;
+        }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F) && !isTrailActive)
+        if (Input.GetKey(KeyCode.F) && !isTrailActive)
         {
             isTrailActive = true;
             StartCoroutine(ActivateTrail(activeTime));
@@ -50,24 +59,19 @@ public class TimeTrail : MonoBehaviour
                     MeshRenderer mr = obj.AddComponent<MeshRenderer>();
                     MeshFilter mf = obj.AddComponent<MeshFilter>();
 
-                    Material[] materials = skinnedMeshRenderer.materials;
-                    Material[] sharedMaterials = new Material[materials.Length];
+                    Material[] materials = new Material[skinnedMeshRenderer.sharedMaterials.Length];
 
                     for (int i = 0; i < materials.Length; i++)
                     {
-                        Material newMaterial = new Material(materials[i]);
-                        newMaterial.SetFloat(shaderVarRef, materials[i].GetFloat(shaderVarRef));
-                        sharedMaterials[i] = newMaterial;
+                        materials[i] = newMaterial;
                     }
 
-                    mr.materials = sharedMaterials;
+                    mr.materials = materials;
 
                     Mesh mesh = new Mesh();
                     skinnedMeshRenderer.BakeMesh(mesh);
 
                     mf.mesh = mesh;
-
-                    StartCoroutine(AnimateMaterialFloat(mr.materials, 0, shaderVarRate, shaderVarRefreshRate));
 
                     Destroy(obj, meshDestroyDelay);
                 }
@@ -77,30 +81,5 @@ public class TimeTrail : MonoBehaviour
         }
 
         isTrailActive = false;
-    }
-
-    IEnumerator AnimateMaterialFloat(Material[] materials, float goal, float rate, float refreshRate)
-    {
-        while (true)
-        {
-            bool allFinished = true;
-
-            for (int i = 0; i < materials.Length; i++)
-            {
-                float valueToAnimate = materials[i].GetFloat(shaderVarRef);
-
-                if (valueToAnimate > goal)
-                {
-                    allFinished = false;
-                    valueToAnimate -= rate;
-                    materials[i].SetFloat(shaderVarRef, valueToAnimate);
-                }
-            }
-
-            if (allFinished)
-                break;
-
-            yield return new WaitForSeconds(refreshRate);
-        }
     }
 }

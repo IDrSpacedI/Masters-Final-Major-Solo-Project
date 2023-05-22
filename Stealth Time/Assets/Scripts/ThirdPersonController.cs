@@ -159,12 +159,28 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
             //crouch
             if (Input.GetKeyDown(KeyCode.C))
             {
                 Crouch();
             }
-           
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                JumpHeight = 5f;
+                MoveSpeed = 5f;
+                SprintSpeed = 10f;
+            }
+
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                JumpHeight = 1.8f;
+                MoveSpeed = 2f;
+                SprintSpeed = 5f;
+
+            }
+
         }
         private bool isCrouched = false;
         private void Crouch()
