@@ -181,8 +181,22 @@ namespace StarterAssets
 
             }
 
+
+            if (isCrouched)
+            {
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+                {
+                    _animator.SetBool("isCrouchWalking", true);
+                }
+                else
+                {
+                    _animator.SetBool("isCrouchWalk", false);
+                }
+            }
+
         }
         private bool isCrouched = false;
+
         private void Crouch()
         {
             if (isCrouched)
@@ -197,7 +211,7 @@ namespace StarterAssets
                 isCrouched = true;
                 print("crouching");
             }
-            
+
         }
 
         private void LateUpdate()
