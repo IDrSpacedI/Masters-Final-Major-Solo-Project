@@ -190,7 +190,7 @@ namespace StarterAssets
                 }
                 else
                 {
-                    _animator.SetBool("isCrouchWalk", false);
+                    _animator.SetBool("isCrouchWalking", false);
                 }
             }
 
