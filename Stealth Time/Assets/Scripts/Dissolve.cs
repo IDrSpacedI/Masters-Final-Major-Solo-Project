@@ -32,7 +32,7 @@ public class Dissolve : MonoBehaviour
 
     private System.Collections.IEnumerator DissolveMaterials()
     {
-        while (dissolveAmount < 0.6f)
+        while (dissolveAmount < 0.7f)
         {
             dissolveAmount += dissolveSpeed * Time.deltaTime;
 

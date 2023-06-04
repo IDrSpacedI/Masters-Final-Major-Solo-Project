@@ -16,6 +16,9 @@ public class EnemyAI : MonoBehaviour
     private bool isFollowingPlayer = false;
     private bool isPatrolling = true;
 
+    public float takedownDistance = 2f;
+    public float destroyDelay = 2f;
+
     private ThirdPersonController playerController; // Reference to the ThirdPersonController script
 
     void Start()
@@ -81,10 +84,41 @@ public class EnemyAI : MonoBehaviour
                 navAgent.speed = followSpeed;
             }
         }
+
+        // Check for takedown input
+        CheckTakedownInput();
+    }
+
+    void CheckTakedownInput()
+    {
+        bool isPlayerCrouched = playerController.isCrouched; // Get the isCrouched property from the ThirdPersonController script
+
+        // Check if player is crouched and press Key T
+        if (Input.GetKeyDown(KeyCode.T) && isPlayerCrouched)
+        {
+            Vector3 playerDirection = (player.position - transform.position).normalized;
+            Vector3 enemyDirection = transform.forward;
+            float angle = Vector3.Angle(playerDirection, enemyDirection);
+
+            // Check if player is behind the AI and within takedown distance
+            if (angle < 270 && Vector3.Distance(transform.position, player.position) <= takedownDistance)
+            {
+                // Play death animation
+                Animator animator = GetComponent<Animator>();
+                animator.SetBool("IsDead", true);
+
+                // Disable enemy movement
+                navAgent.enabled = false;
+
+                // Destroy the enemy AI after the specified delay
+                Destroy(gameObject, destroyDelay);
+            }
+        }
     }
 
     void SetDestination(Transform target)
     {
         navAgent.SetDestination(target.position);
     }
+
 }
