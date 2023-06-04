@@ -195,7 +195,7 @@ namespace StarterAssets
             }
 
         }
-        private bool isCrouched = false;
+        public bool isCrouched = false;
 
         private void Crouch()
         {

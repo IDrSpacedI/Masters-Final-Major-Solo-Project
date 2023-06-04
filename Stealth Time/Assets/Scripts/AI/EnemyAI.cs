@@ -1,3 +1,4 @@
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +16,8 @@ public class EnemyAI : MonoBehaviour
     private bool isFollowingPlayer = false;
     private bool isPatrolling = true;
 
+    private ThirdPersonController playerController; // Reference to the ThirdPersonController script
+
     void Start()
     {
         navAgent = GetComponent<NavMeshAgent>();
@@ -31,15 +34,19 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError("No waypoints assigned to the enemy!");
         }
+
+        playerController = player.GetComponent<ThirdPersonController>(); // Get the ThirdPersonController script from the player
     }
 
     void Update()
     {
         if (isFollowingPlayer)
         {
-            // Follow the player if within detection range
+            // Follow the player if within detection range and not crouched
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            if (distanceToPlayer <= detectionRange)
+            bool isPlayerCrouched = playerController.isCrouched; // Get the isCrouched property from the ThirdPersonController script
+
+            if (distanceToPlayer <= detectionRange && !isPlayerCrouched)
             {
                 SetDestination(player);
                 navAgent.speed = followSpeed;
@@ -62,9 +69,11 @@ public class EnemyAI : MonoBehaviour
                 SetDestination(currentTarget);
             }
 
-            // Check if player is close enough to start following
+            // Check if player is close enough and not crouched to start following
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            if (distanceToPlayer <= detectionRange)
+            bool isPlayerCrouched = playerController.isCrouched; // Get the isCrouched property from the ThirdPersonController script
+
+            if (distanceToPlayer <= detectionRange && !isPlayerCrouched)
             {
                 isFollowingPlayer = true;
                 isPatrolling = false;
