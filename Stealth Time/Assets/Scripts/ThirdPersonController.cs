@@ -204,20 +204,26 @@ namespace StarterAssets
 
         private void Crouch()
         {
-            if (isCrouched)
+            if (isCrouched && isCrouchWalking == false)
             {
                 _animator.SetBool("isCrouched", false);
                 isCrouched = false;
                 print("stopped crouching");
+
+                // Allow jumping when transitioning from crouch to standing
+                _jumpTimeoutDelta = JumpTimeout;
             }
             else
             {
                 _animator.SetBool("isCrouched", true);
                 isCrouched = true;
                 print("crouching");
-            }
 
+                // Prevent jumping when crouching
+                _jumpTimeoutDelta = float.MaxValue;
+            }
         }
+
 
         private void LateUpdate()
         {
@@ -357,8 +363,8 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
-                // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                // jump
+                if (!isCrouched && !isCrouchWalking && Grounded && _input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
