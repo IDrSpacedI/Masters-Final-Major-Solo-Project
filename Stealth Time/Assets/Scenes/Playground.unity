@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: f6c51332ac7d92541a38fb263b09d2a8, type: 2}
   m_HaloStrength: 0.5
@@ -5046,6 +5046,7 @@ GameObject:
   - component: {fileID: 6982812147933622150}
   - component: {fileID: 6982812147933622151}
   - component: {fileID: 6982812147933622149}
+  - component: {fileID: 6982812147933622152}
   - component: {fileID: 5885216829670671795}
   - component: {fileID: 135756641613574975}
   - component: {fileID: 4416926083347132239}
@@ -5775,9 +5776,9 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 43714b68324cc2c409d534d9874f2a2b, type: 2}
-  - {fileID: 2100000, guid: 766fd3ff04aab4745a764d33daac86fa, type: 2}
-  - {fileID: 2100000, guid: 8b25e99361ac31d4e9ae83c46aee69ea, type: 2}
+  - {fileID: 2100000, guid: 2b9e4f5231bb46645b3c2c63b4c3ba6e, type: 2}
+  - {fileID: 2100000, guid: b741480876730814b9f0e2795a30d7c6, type: 2}
+  - {fileID: 2100000, guid: a5dd54a9d7ca47d41a8fe789c59eeca3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6600,6 +6601,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nightvision: {fileID: 1317199183}
+--- !u!114 &6982812147933622152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926083347132227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4467030926642924c92f641efb717986, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materials:
+  - {fileID: 2100000, guid: 2b9e4f5231bb46645b3c2c63b4c3ba6e, type: 2}
+  - {fileID: 2100000, guid: b741480876730814b9f0e2795a30d7c6, type: 2}
+  - {fileID: 2100000, guid: a5dd54a9d7ca47d41a8fe789c59eeca3, type: 2}
+  dissolveSpeed: 0.5
 --- !u!4 &6983258930626336602
 Transform:
   m_ObjectHideFlags: 0
