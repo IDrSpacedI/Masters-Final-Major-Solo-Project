@@ -187,15 +187,20 @@ namespace StarterAssets
                 if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
                 {
                     _animator.SetBool("isCrouchWalking", true);
+                    isCrouchWalking = true;
+                    MoveSpeed = 1f;
                 }
                 else
                 {
                     _animator.SetBool("isCrouchWalking", false);
+                    isCrouchWalking = false;
+                    MoveSpeed = 2f;
                 }
             }
 
         }
         public bool isCrouched = false;
+        public bool isCrouchWalking = false;
 
         private void Crouch()
         {
@@ -267,7 +272,7 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = isCrouchWalking ? MoveSpeed : (_input.sprint ? SprintSpeed : MoveSpeed);
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 

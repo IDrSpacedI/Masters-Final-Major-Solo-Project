@@ -8,7 +8,7 @@ public class Dissolve : MonoBehaviour
     public float dissolveSpeed = 0.1f; // Speed of the dissolve transition
 
     private bool isDissolving = false; // Flag to check if currently dissolving
-    public float dissolveAmount = 0f; // Current dissolve amount
+    private float dissolveAmount = 0f; // Current dissolve amount
 
     private void Start()
     {
