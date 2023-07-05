@@ -9,6 +9,18 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void RestartLevel1()
+    {
+        // Restart level 1 by reloading the scene
+        SceneManager.LoadScene(1);
+    }
+
+    public void GoToMainMenu()
+    {
+        // Load the main menu scene
+        SceneManager.LoadScene(0);
+    }
+
     public void ExitGame()
     {
         // Exit the application (works in standalone builds)
