@@ -1,6 +1,7 @@
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -61,6 +62,12 @@ public class EnemyAI : MonoBehaviour
                 SetDestination(currentTarget);
                 navAgent.speed = patrolSpeed;
             }
+
+            // Check if the enemy is within a certain distance of the player
+            if (distanceToPlayer <= takedownDistance)
+            {
+                EndGame();
+            }
         }
         else if (isPatrolling)
         {
@@ -84,9 +91,12 @@ public class EnemyAI : MonoBehaviour
                 navAgent.speed = followSpeed;
             }
         }
+    }
 
-        // Check for takedown input
-        CheckTakedownInput();
+    void EndGame()
+    {
+        // Change to the next scene or perform game over logic here
+        SceneManager.LoadScene("Mission Failed");
     }
 
     void CheckTakedownInput()
@@ -120,5 +130,4 @@ public class EnemyAI : MonoBehaviour
     {
         navAgent.SetDestination(target.position);
     }
-
 }

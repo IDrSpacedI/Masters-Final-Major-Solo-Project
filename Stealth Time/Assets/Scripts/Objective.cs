@@ -1,12 +1,23 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class Objective : MonoBehaviour
 {
-    public TMP_Text objectiveText; // Reference to the TextMeshPro UI component representing the objective
+    public string objectiveID; // Unique identifier for the objective
+    public TextMeshProUGUI objectiveText; // Reference to the TextMeshProUGUI component representing the objective
     public KeyCode interactionKey = KeyCode.E; // Key to interact with the objective
 
-    private bool isCompleted = false; // Flag to track completion status
+    private static Dictionary<string, bool> objectiveCompletionStatus = new Dictionary<string, bool>();
+
+    private void Start()
+    {
+        // Initialize the completion status for this objective
+        if (!objectiveCompletionStatus.ContainsKey(objectiveID))
+        {
+            objectiveCompletionStatus.Add(objectiveID, false);
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -29,7 +40,7 @@ public class Objective : MonoBehaviour
     private void Update()
     {
         // Check if the player is inside the trigger and the interaction key is pressed
-        if (isCompleted == false && objectiveText.fontStyle != FontStyles.Strikethrough && Input.GetKeyDown(interactionKey))
+        if (!objectiveCompletionStatus[objectiveID] && Input.GetKeyDown(interactionKey))
         {
             CompleteObjective();
         }
@@ -38,9 +49,9 @@ public class Objective : MonoBehaviour
     private void CompleteObjective()
     {
         // Toggle completion status
-        isCompleted = true;
+        objectiveCompletionStatus[objectiveID] = true;
 
-        // Update the objective text to show completion
+        // Apply strikethrough effect
         objectiveText.fontStyle = FontStyles.Strikethrough;
 
         // Disable interaction prompt, hide UI or any other desired behavior
