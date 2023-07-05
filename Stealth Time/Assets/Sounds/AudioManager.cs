@@ -34,10 +34,7 @@ public class AudioManager : MonoBehaviour
     void Start()
     { 
         Play("Rain");
-        
-
-
-
+       
     }
 
     public void Play (string name)
