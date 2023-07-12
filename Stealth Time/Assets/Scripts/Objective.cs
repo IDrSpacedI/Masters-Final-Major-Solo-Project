@@ -1,59 +1,58 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 public class Objective : MonoBehaviour
 {
-    public string objectiveID; // Unique identifier for the objective
-    public TextMeshProUGUI objectiveText; // Reference to the TextMeshProUGUI component representing the objective
-    public KeyCode interactionKey = KeyCode.E; // Key to interact with the objective
+    public GameObject[] objectiveGameObjects; // Array of GameObjects representing the objectives
+    public TextMeshProUGUI[] objectiveTexts; // Array of TextMeshProUGUI components representing the objectives' messages
+    public string[] objectiveMessages; // Array of objective messages
+    public KeyCode interactionKey = KeyCode.E; // Key to interact with the objectives
 
-    private static Dictionary<string, bool> objectiveCompletionStatus = new Dictionary<string, bool>();
+    private int currentObjectiveIndex = 0; // Index to track the current objective
 
     private void Start()
     {
-        // Initialize the completion status for this objective
-        if (!objectiveCompletionStatus.ContainsKey(objectiveID))
-        {
-            objectiveCompletionStatus.Add(objectiveID, false);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // Check if the colliding object is the player
-        if (other.CompareTag("Player"))
-        {
-            // Enable interaction prompt, show UI or any other desired behavior
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        // Check if the colliding object is the player
-        if (other.CompareTag("Player"))
-        {
-            // Disable interaction prompt, hide UI or any other desired behavior
-        }
+        // Initialize the first objective message
+        objectiveTexts[currentObjectiveIndex].text = objectiveMessages[currentObjectiveIndex];
     }
 
     private void Update()
     {
-        // Check if the player is inside the trigger and the interaction key is pressed
-        if (!objectiveCompletionStatus[objectiveID] && Input.GetKeyDown(interactionKey))
+        // Check if the interaction key is pressed
+        if (Input.GetKeyDown(interactionKey))
         {
-            CompleteObjective();
+            Interact();
         }
     }
 
-    private void CompleteObjective()
+    private void Interact()
     {
-        // Toggle completion status
-        objectiveCompletionStatus[objectiveID] = true;
+        // Check if the current objective is active and not completed
+        if (currentObjectiveIndex < objectiveGameObjects.Length && objectiveGameObjects[currentObjectiveIndex].activeSelf &&
+            !objectiveTexts[currentObjectiveIndex].fontStyle.HasFlag(FontStyles.Strikethrough))
+        {
+            // Strike through the objective message
+            objectiveTexts[currentObjectiveIndex].fontStyle |= FontStyles.Strikethrough;
 
-        // Apply strikethrough effect
-        objectiveText.fontStyle = FontStyles.Strikethrough;
+            // Disable the current objective GameObject
+            objectiveGameObjects[currentObjectiveIndex].SetActive(false);
 
-        // Disable interaction prompt, hide UI or any other desired behavior
+            // Move to the next objective
+            currentObjectiveIndex++;
+
+            // Check if all objectives are completed
+            if (currentObjectiveIndex >= objectiveGameObjects.Length)
+            {
+                // All objectives are completed
+                Debug.Log("All objectives completed!");
+                return;
+            }
+
+            // Enable the next objective GameObject
+            objectiveGameObjects[currentObjectiveIndex].SetActive(true);
+
+            // Update the objective text with the next message
+            objectiveTexts[currentObjectiveIndex].text = objectiveMessages[currentObjectiveIndex];
+        }
     }
 }
