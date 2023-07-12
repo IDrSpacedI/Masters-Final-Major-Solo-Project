@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Objective : MonoBehaviour
 {
@@ -7,6 +9,11 @@ public class Objective : MonoBehaviour
     public TextMeshProUGUI[] objectiveTexts; // Array of TextMeshProUGUI components representing the objectives' messages
     public string[] objectiveMessages; // Array of objective messages
     public KeyCode interactionKey = KeyCode.E; // Key to interact with the objectives
+
+    [Header("Ending GameObjects")]
+    public GameObject EndCamera;
+    public GameObject EndTimeline;
+    public GameObject Player;
 
     private int currentObjectiveIndex = 0; // Index to track the current objective
 
@@ -45,6 +52,7 @@ public class Objective : MonoBehaviour
             {
                 // All objectives are completed
                 Debug.Log("All objectives completed!");
+                StartCoroutine(EndDelay());
                 return;
             }
 
@@ -55,4 +63,16 @@ public class Objective : MonoBehaviour
             objectiveTexts[currentObjectiveIndex].text = objectiveMessages[currentObjectiveIndex];
         }
     }
+
+    private IEnumerator EndDelay()
+    {
+        EndCamera.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        EndTimeline.SetActive(true);
+        yield return new WaitForSeconds(14f);
+        SceneManager.LoadScene("Mission Complete");
+    }
+
+
+
 }
