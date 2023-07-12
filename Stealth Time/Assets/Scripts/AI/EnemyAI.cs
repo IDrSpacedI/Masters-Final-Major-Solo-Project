@@ -21,6 +21,7 @@ public class EnemyAI : MonoBehaviour
     public float destroyDelay = 2f;
 
     private ThirdPersonController playerController; // Reference to the ThirdPersonController script
+    private Dissolve PlayerInvis; // reference if dissolve script
 
     void Start()
     {
@@ -40,6 +41,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         playerController = player.GetComponent<ThirdPersonController>(); // Get the ThirdPersonController script from the player
+        PlayerInvis = player.GetComponent<Dissolve>(); //Get the Dissolve script from the player
     }
 
     void Update()
@@ -49,8 +51,9 @@ public class EnemyAI : MonoBehaviour
             // Follow the player if within detection range and not crouched
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
             bool isPlayerCrouched = playerController.isCrouched; // Get the isCrouched property from the ThirdPersonController script
+            bool isPlayerInvis = PlayerInvis.isInvis;
 
-            if (distanceToPlayer <= detectionRange && !isPlayerCrouched)
+            if (distanceToPlayer <= detectionRange && isPlayerInvis == false)
             {
                 SetDestination(player);
                 navAgent.speed = followSpeed;
@@ -82,8 +85,9 @@ public class EnemyAI : MonoBehaviour
             // Check if player is close enough and not crouched to start following
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
             bool isPlayerCrouched = playerController.isCrouched; // Get the isCrouched property from the ThirdPersonController script
+            bool isPlayerInvis = PlayerInvis.isInvis;
 
-            if (distanceToPlayer <= detectionRange && !isPlayerCrouched)
+            if (distanceToPlayer <= detectionRange && isPlayerInvis == false)
             {
                 isFollowingPlayer = true;
                 isPatrolling = false;

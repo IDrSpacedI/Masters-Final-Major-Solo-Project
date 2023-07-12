@@ -9,6 +9,7 @@ public class Dissolve : MonoBehaviour
     public float dissolveSpeed = 0.1f; // Speed of the dissolve transition
 
     private bool isDissolving = false; // Flag to check if currently dissolving
+    public bool isInvis = false;
     private float dissolveAmount = 0f; // Current dissolve amount
 
     public Slider countdownSlider; // Reference to the UI slider
@@ -73,6 +74,8 @@ public class Dissolve : MonoBehaviour
     {
         while (dissolveAmount < 0.7f)
         {
+            isInvis = true;
+
             dissolveAmount += dissolveSpeed * Time.deltaTime;
 
             foreach (Material material in materials)
@@ -86,6 +89,8 @@ public class Dissolve : MonoBehaviour
     {
         while (dissolveAmount > 0f)
         {
+            isInvis = false;
+
             dissolveAmount -= dissolveSpeed * Time.deltaTime;
 
             foreach (Material material in materials)
