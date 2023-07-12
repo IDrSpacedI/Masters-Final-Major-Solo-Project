@@ -17,6 +17,8 @@ public class Dissolve : MonoBehaviour
     private bool isCountingDown = false; // Flag to check if currently counting down
     private float countdownTime = 0f; // Current countdown time
 
+    private bool stopdissolve = false;
+
     private void Start()
     {
         // Set the initial dissolve amount to 0
@@ -29,7 +31,7 @@ public class Dissolve : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !stopdissolve)
         {
             isDissolving = !isDissolving; // Toggle dissolve state
 
@@ -56,6 +58,9 @@ public class Dissolve : MonoBehaviour
             if (countdownTime <= 0f)
             {
                 StopCountdown();
+                StartCoroutine(ReverseDissolveMaterials());
+                stopdissolve = true;
+                countdownSlider.value = 0f;
             }
             else
             {
