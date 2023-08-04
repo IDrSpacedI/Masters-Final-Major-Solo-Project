@@ -36,6 +36,8 @@ public class Dissolve : MonoBehaviour
         {
             isDissolving = !isDissolving; // Toggle dissolve state
 
+            FindObjectOfType<AudioManager>().Play("Cloak");
+
             if (isDissolving)
                 StartCoroutine(DissolveMaterials());
             else
