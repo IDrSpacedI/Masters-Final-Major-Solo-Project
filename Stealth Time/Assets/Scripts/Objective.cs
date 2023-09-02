@@ -9,6 +9,7 @@ public class Objective : MonoBehaviour
     public TextMeshProUGUI[] objectiveTexts; // Array of TextMeshProUGUI components representing the objectives' messages
     public string[] objectiveMessages; // Array of objective messages
     public KeyCode interactionKey = KeyCode.E; // Key to interact with the objectives
+    public Collider playerCollider; // Reference to the player's collider
 
     [Header("Ending GameObjects")]
     public GameObject EndCamera;
@@ -25,11 +26,25 @@ public class Objective : MonoBehaviour
 
     private void Update()
     {
-        // Check if the interaction key is pressed
-        if (Input.GetKeyDown(interactionKey))
+        // Check if the interaction key is pressed and the player is within the current objective's collider
+        if (Input.GetKeyDown(interactionKey) && IsPlayerInsideObjectiveCollider())
         {
             Interact();
         }
+    }
+
+    private bool IsPlayerInsideObjectiveCollider()
+    {
+        if (currentObjectiveIndex < objectiveGameObjects.Length)
+        {
+            // Check if the player's collider overlaps with the current objective's collider
+            Collider objectiveCollider = objectiveGameObjects[currentObjectiveIndex].GetComponent<Collider>();
+            if (objectiveCollider != null)
+            {
+                return objectiveCollider.bounds.Intersects(playerCollider.bounds);
+            }
+        }
+        return false;
     }
 
     private void Interact()
@@ -72,7 +87,4 @@ public class Objective : MonoBehaviour
         yield return new WaitForSeconds(14f);
         SceneManager.LoadScene("Mission Complete");
     }
-
-
-
 }

@@ -32,7 +32,7 @@ public class Dissolve : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C) && !stopdissolve)
+        if (Input.GetKeyDown(KeyCode.Q) && !stopdissolve)
         {
             isDissolving = !isDissolving; // Toggle dissolve state
 
